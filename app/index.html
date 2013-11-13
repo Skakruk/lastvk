@@ -38,10 +38,7 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li>
-              <a href="http://www.last.fm/api/auth/?api_key=e5b0685046dd1fdcf351e21ad6728ad2&cb=http://last.vk">Login to last.fm</a>
-            </li>
-            <li><a id="login_button" onclick="VK.Auth.login(authInfo);">Login to VK</a></li>
+            
           </ul>
         </div><!-- /.nav-collapse -->
       </div><!-- /.container -->
@@ -58,11 +55,11 @@
           <p class="pull-right visible-xs">
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
           </p>
-          <form class="form-inline" role="form">
+          <form class="form-inline" id="search-form" role="form">
             <div class="form-group col-sm-10">
                 <input type="text" class="form-control" id="search-query" placeholder="What are we going listen to?">
             </div>
-            <button class="btn" id="search" disabled>Get it!</button>
+            <button type="submit" class="btn" id="search" disabled>Get it!</button>
           </form>
 
             <div>
@@ -82,26 +79,7 @@
               <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
               <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
             </div><!--/span-->
-            <div class="col-6 col-sm-6 col-lg-4">
-              <h2>Heading</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-            </div><!--/span-->
-            <div class="col-6 col-sm-6 col-lg-4">
-              <h2>Heading</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-            </div><!--/span-->
-            <div class="col-6 col-sm-6 col-lg-4">
-              <h2>Heading</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-            </div><!--/span-->
-            <div class="col-6 col-sm-6 col-lg-4">
-              <h2>Heading</h2>
-              <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-              <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-            </div><!--/span-->
+            
           </div><!--/row-->
         </div><!--/span-->
 
@@ -118,15 +96,16 @@
                   <ul class="jp-controls">
                       <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
                       <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
-                      <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
-                      <li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
-                      <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
-                      <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
+                      <li><a href="javascript:;" class="jp-next" tabindex="1">stop</a></li>
+                      <li style="float: right; margin-right: 60px;"><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
+                      <li style="float: right; margin-right: 60px;"><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
                   </ul>
-                  <div class="jp-progress">
-                      <div class="jp-seek-bar">
-                          <div class="jp-play-bar"></div>
-                      </div>
+                  <div class="jp-progress-wrap">
+                    <div class="jp-progress">
+                        <div class="jp-seek-bar">
+                            <div class="jp-play-bar"></div>
+                        </div>
+                    </div>
                   </div>
                   <div class="jp-volume-bar">
                       <div class="jp-volume-bar-value"></div>
@@ -148,7 +127,26 @@
           </div>
         </div>
       </footer>
-      
+        
+
+      <!-- Modal -->
+      <div class="modal fade" id="loginsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="text-center">
+                <button type="button" id="last-login" class="btn btn-primary">Login to Last.fm</button>
+                <button type="button" id="vk-login" class="btn btn-primary">Login to VK</button>
+              </div>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <div id="loading" class="fade">
+        <img src="images/301.GIF"/>
+        <div class="shadow"></div>
+      </div>
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
         <script src="bower_components/jquery/jquery.js"></script>

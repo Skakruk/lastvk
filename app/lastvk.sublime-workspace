@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"over",
+				"overflow-y"
+			],
+			[
+				"artist",
+				"artistsLoaded"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
 				"re",
 				"required"
 			],
@@ -115,7 +127,7 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 10956,
+				"buffer_size": 10388,
 				"line_ending": "Unix"
 			}
 		},
@@ -123,7 +135,7 @@
 			"file": "scripts/main.js",
 			"settings":
 			{
-				"buffer_size": 1114,
+				"buffer_size": 4282,
 				"line_ending": "Windows"
 			}
 		},
@@ -131,7 +143,7 @@
 			"file": "scripts/helpers.js",
 			"settings":
 			{
-				"buffer_size": 295,
+				"buffer_size": 538,
 				"line_ending": "Windows",
 				"name": "function getParameterByName(name) {"
 			}
@@ -140,7 +152,15 @@
 			"file": "styles/main.scss",
 			"settings":
 			{
-				"buffer_size": 1144,
+				"buffer_size": 1347,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/Users/vkenyz/Documents/GitHub/lastvk/.jshintrc",
+			"settings":
+			{
+				"buffer_size": 456,
 				"line_ending": "Unix"
 			}
 		}
@@ -185,6 +205,7 @@
 	},
 	"file_history":
 	[
+		"/C/Users/vkenyz/Documents/GitHub/lastvk/app/scripts/lastfm.api.js",
 		"/C/Users/vkenyz/AppData/Roaming/Sublime Text 2/Packages/User/LiveReload.sublime-settings",
 		"/C/Users/vkenyz/AppData/Roaming/Sublime Text 2/Packages/LiveReload/LiveReload.sublime-settings",
 		"/C/Users/vkenyz/Documents/GitHub/lastvk/app/sass/main.scss",
@@ -311,8 +332,7 @@
 		"/C/work/tem/trunk/sem/target/sem/Resources/jsp/ManageAsset/updateUseDetails.jsp",
 		"/C/work/tem/trunk/sem/src/main/webapp/TFE/app/scripts/controllers/mocks.js",
 		"/C/work/tem/trunk/sem/src/main/webapp/TFE/app/scripts/controllers/user.js",
-		"/C/work/tem/trunk/sem/src/main/java/com/mgems/Presentation/Action/SCUAssetAction.java",
-		"/C/work/tem/trunk/sem/src/main/webapp/gen4api/accounts.json"
+		"/C/work/tem/trunk/sem/src/main/java/com/mgems/Presentation/Action/SCUAssetAction.java"
 	],
 	"find":
 	{
@@ -388,6 +408,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"internalCall",
 			"setSrc",
 			"imagemin",
 			"  ",
@@ -514,8 +535,7 @@
 			"framescr: '",
 			"framescr: '/sem/",
 			"popupContainer",
-			"gPopupContainer",
-			"showPopWin"
+			"gPopupContainer"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -546,7 +566,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -554,15 +574,15 @@
 					"file": "index.html",
 					"settings":
 					{
-						"buffer_size": 10956,
+						"buffer_size": 10388,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1233,
-								1233
+								1775,
+								1775
 							]
 						],
 						"settings":
@@ -661,7 +681,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 733.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -671,15 +691,15 @@
 					"file": "scripts/main.js",
 					"settings":
 					{
-						"buffer_size": 1114,
+						"buffer_size": 4282,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								898,
-								898
+								3371,
+								3371
 							]
 						],
 						"settings":
@@ -779,7 +799,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1019.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -789,15 +809,15 @@
 					"file": "scripts/helpers.js",
 					"settings":
 					{
-						"buffer_size": 295,
+						"buffer_size": 538,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9,
-								27
+								305,
+								317
 							]
 						],
 						"settings":
@@ -905,15 +925,15 @@
 					"file": "styles/main.scss",
 					"settings":
 					{
-						"buffer_size": 1144,
+						"buffer_size": 1347,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								426,
-								426
+								635,
+								635
 							]
 						],
 						"settings":
@@ -1012,7 +1032,124 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 42.0,
+						"translation.y": 235.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/C/Users/vkenyz/Documents/GitHub/lastvk/.jshintrc",
+					"settings":
+					{
+						"buffer_size": 456,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								447,
+								447
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": true,
+							"sublimelinter_delay": 2,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": true,
+							"sublimelinter_gutter_marks_theme": "simple",
+							"sublimelinter_mark_style": "none",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
