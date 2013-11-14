@@ -48,8 +48,7 @@ function getLastToken() {
 }
 
 function initApis() {
-
-    if (app.last.sk.length > 0) {
+    if (app.last.sk && app.last.sk.length > 0) {
         isLastAuthorized = true;
         $('#search').prop('disabled', false);
         $('#last-login').prop('disabled', true);
@@ -57,6 +56,7 @@ function initApis() {
             loginsModal.modal('hide');
         }
     } else {
+        $('#last-login').prop('disabled', false);
         loginsModal.modal('show');
     }
 
@@ -78,6 +78,7 @@ function initApis() {
                 loginsModal.modal('hide');
             }
         } else {
+            $('#vk-login').prop('disabled', false);
             loginsModal.modal('show');
         }
     }
@@ -85,7 +86,9 @@ function initApis() {
     VK.Auth.getLoginStatus(authInfo);
 }
 $(document).ready(function() {
-    loginsModal = $('#loginsModal').modal();
+    loginsModal = $('#loginsModal').modal({
+        backdrop: 'static'
+    });
 
     player = $('#player').jPlayer({
         swfPath: 'scripts/jplayer',
@@ -125,7 +128,7 @@ $(document).ready(function() {
             token: app.lfmToken
         }, {
             success: function(data) {
-                app.sk = data.session.key;
+                app.last.sk = data.session.key;
                 localStorage.last = JSON.stringify({
                     sk: data.session.key
                 });
