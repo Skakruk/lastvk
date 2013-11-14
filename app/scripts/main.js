@@ -16,7 +16,7 @@ var app = {
     host: 'last.vk'
 };
 
-if(location.hostname === 'skakruk.github.io'){
+if (location.hostname === 'skakruk.github.io') {
     app.apikeys.vk = 3996225;
     app.host = 'skakruk.github.io/lastvk/app/';
 }
@@ -54,6 +54,28 @@ function getLastToken() {
 
 }
 
+function authInfo(response) {
+    if (response.session) {
+        VK.Api.call('users.get', {
+            uids: response.session.mid
+        }, function(r) {
+            if (r.response) {
+                response.session = $.merge(response.session, r.response[0]);
+            }
+        });
+        isVKAuthorized = true;
+        localStorage.setItem('vk', JSON.stringify(response.session));
+        app.vk = response.session;
+        $('#vk-login').prop('disabled', true);
+        if (isLastAuthorized) {
+            loginsModal.modal('hide');
+        }
+    } else {
+        $('#vk-login').prop('disabled', false);
+        loginsModal.modal('show');
+    }
+}
+
 function initApis() {
     if (app.last.sk && app.last.sk.length > 0) {
         isLastAuthorized = true;
@@ -67,34 +89,21 @@ function initApis() {
         loginsModal.modal('show');
     }
 
-    function authInfo(response) {
-
-        if (response.session) {
-            VK.Api.call('users.get', {
-                uids: response.session.mid
-            }, function(r) {
-                if (r.response) {
-                    response.session = $.merge(response.session, r.response[0]);
-                }
-            });
-            isVKAuthorized = true;
-            localStorage.setItem('vk', JSON.stringify(response.session));
-            app.vk = response.session;
-            $('#vk-login').prop('disabled', true);
-            if (isLastAuthorized) {
-                loginsModal.modal('hide');
-            }
-        } else {
-            $('#vk-login').prop('disabled', false);
-            loginsModal.modal('show');
-        }
-    }
-
     VK.Auth.getLoginStatus(authInfo);
+}
+
+function sidebarHeight() {
+    var nH = +$(window).height() - 140;
+    $('#sidebar').css('height', nH);
 }
 $(document).ready(function() {
     loginsModal = $('#loginsModal').modal({
         backdrop: 'static'
+    });
+
+    sidebarHeight();
+    $(window).resize(function() {
+        sidebarHeight();
     });
 
     player = $('#player').jPlayer({
@@ -139,6 +148,7 @@ $(document).ready(function() {
                 localStorage.last = JSON.stringify({
                     sk: data.session.key
                 });
+                initApis();
             },
             error: function(code, message) {
                 console.log(code, message);
@@ -159,6 +169,8 @@ $(document).ready(function() {
         if (!$(this).is(':disabled'))
             window.location = 'http://www.last.fm/api/auth/?api_key=' + app.apikeys.last.apiKey + '&cb=http://' + app.host;
     });
+
+
 
     $('#search-form').on('submit', function(e) {
         e.preventDefault();
@@ -214,7 +226,7 @@ $(document).ready(function() {
         $.each(newArtists, function(ind, artist) {
             pipe.push(loadSongs(artist, thissongs));
         });
-        
+
         $.when.apply($, pipe).then(function(newSongs) {
             $('#playlist').trigger('playlistUpdated', [newSongs]);
         });
@@ -241,18 +253,29 @@ $(document).ready(function() {
         selEl.addClass('active');
 
         currentIndex = $(this).index();
-        
+
         curSong = selEl.data('song');
 
         var exactSongs = [];
 
         var query = curSong.artist.name + ' - ' + curSong.name;
 
+        $('title').html(query);
+
         VK.Api.call('audio.search', {
             q: query,
             sort: 2,
             count: 10
         }, function(r) {
+            if(r.error){
+                if(r.error.error_code === 7){
+                    VK.Auth.logout(function(){
+                        $('#vk-login').prop('disabled', false);
+                        loginsModal.modal('show');
+                    });
+                }
+                return;
+            }
             if (r.response) {
                 var vsongs = r.response.splice(1);
                 $.each(vsongs, function(ind, song) {
@@ -274,7 +297,7 @@ $(document).ready(function() {
 
                 if (curSong.image) {
                     songImgSrc = curSong.image[3]['#text'];
-                } else if(curSong.artist.image){
+                } else if (curSong.artist.image) {
                     songImgSrc = curSong.image[3]['#text'];
                 }
 
@@ -291,17 +314,17 @@ $(document).ready(function() {
                     success: function(data) {
                         var track = data.track;
                         var tags = [];
-                        if(track.album){
+                        if (track.album) {
                             $('#album-name').html(track.album.title).parent().show();
-                        }else{
+                        } else {
                             $('#album-name').parent().hide();
                         }
-                        if(track.toptags.tag){
+                        if (track.toptags.tag) {
                             for (var i in track.toptags.tag) {
                                 tags.push(track.toptags.tag[i].name);
                             }
                             $('#track-genre').html(tags.join(', ')).parent().show();
-                        }else{
+                        } else {
                             $('#track-genre').parent().hide();
                         }
                     },
@@ -310,19 +333,19 @@ $(document).ready(function() {
 
                     }
                 });
-                
+
                 lastfm.artist.getInfo({
                     mbid: curSong.artist.mbid,
                     artist: curSong.artist.name
                 }, {
                     success: function(data) {
                         var artist = data.artist;
-                        if(artist.bio.content){
+                        if (artist.bio.content) {
                             $('#bio').html(artist.bio.content.replace(/\n/g, '<br/>')).show();
-                        }else{
+                        } else {
                             $('#bio').hide();
                         }
-                            
+
                     },
                     error: function(code, reason) {
                         console.log(code, reason);
