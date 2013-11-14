@@ -307,9 +307,8 @@ $(document).ready(function() {
                 }, {
                     success: function(data) {
                         var artist = data.artist;
-                        console.log(artist);
                         if(artist.bio.content){
-                            $('#bio').html(artist.bio.content.replace(/\n/g, "<br />")).show();
+                            $('#bio').html(artist.bio.content.replace(/\n/g, '<br/>')).show();
                         }else{
                             $('#bio').hide();
                         }
