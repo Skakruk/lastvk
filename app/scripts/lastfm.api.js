@@ -56,7 +56,6 @@ function LastFM(options){
 					callbacks.success();
 				}
 			};
-
 			/* Append iframe. */
 			html.appendChild(iframe);
 
@@ -842,9 +841,8 @@ function LastFM(options){
 			}
 
 			string += apiSecret;
-
 			/* Needs lastfm.api.md5.js. */
-			return md5(string);
+			return CryptoJS.MD5(string);
 		}
 	};
 }

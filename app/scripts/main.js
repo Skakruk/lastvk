@@ -9,7 +9,10 @@ var app = {
     },
     artists: [],
     playlist: [],
-    vk: {}
+    vk: {},
+    last: {
+        sk: null
+    }
 };
 var player;
 var isLastAuthorized = false;
@@ -17,6 +20,7 @@ var isVKAuthorized = false;
 var loginsModal;
 var currentIndex = -1;
 var cache = new LastFMCache();
+var curSong;
 
 /* Create a LastFM object */
 var lastfm = new LastFM({
@@ -25,43 +29,34 @@ var lastfm = new LastFM({
     cache: cache
 });
 
-$(document).ready(function() {
-    loginsModal = $('#loginsModal').modal();
+function pushtoScrobbler(curSong) {
+    if (!curSong.scrobbled) {
+        var timestamp = Math.floor((new Date()).getTime() / 1000);
+        lastfm.track.scrobble([{
+            artist: curSong.artist.name,
+            track: curSong.name,
+            timestamp: timestamp
+        }], {
+            key: app.last.sk
+        });
+        curSong.scrobbled = true;
+    }
+}
 
-    player = $('#player').jPlayer({
-        swfPath: 'scripts/jplayer',
-        supplied: 'mp3',
-        wmode: 'window',
-        smoothPlayBar: true,
-        keyEnabled: true,
-        volume: 0.4,
-        ended: function(){
-            currentIndex++;
-            $('#playlist a:eq(' + currentIndex +')').trigger('click');
-        }
-    });
-    $('.jp-next').on('click', function(e){
-        e.preventDefault();
-        currentIndex++;
-        $('#playlist a:eq(' + currentIndex +')').trigger('click');
-    });
+function getLastToken() {
 
-    VK.init({
-        apiId: app.apikeys.vk
-    });
+}
 
-    var lfmToken = getParameterByName('token') || localStorage.lastToken;
+function initApis() {
 
-    localStorage.lastToken = lfmToken;
-
-    if (lfmToken.length > 0) {
+    if (app.last.sk.length > 0) {
         isLastAuthorized = true;
         $('#search').prop('disabled', false);
         $('#last-login').prop('disabled', true);
-        if(isVKAuthorized){
+        if (isVKAuthorized) {
             loginsModal.modal('hide');
         }
-    }else{
+    } else {
         loginsModal.modal('show');
     }
 
@@ -79,7 +74,7 @@ $(document).ready(function() {
             localStorage.setItem('vk', JSON.stringify(response.session));
             app.vk = response.session;
             $('#vk-login').prop('disabled', true);
-            if(isLastAuthorized){
+            if (isLastAuthorized) {
                 loginsModal.modal('hide');
             }
         } else {
@@ -88,17 +83,72 @@ $(document).ready(function() {
     }
 
     VK.Auth.getLoginStatus(authInfo);
+}
+$(document).ready(function() {
+    loginsModal = $('#loginsModal').modal();
+
+    player = $('#player').jPlayer({
+        swfPath: 'scripts/jplayer',
+        supplied: 'mp3',
+        wmode: 'window',
+        smoothPlayBar: true,
+        keyEnabled: true,
+        volume: 0.4,
+        ended: function() {
+            currentIndex++;
+            $('#playlist a:eq(' + currentIndex + ')').trigger('click');
+        },
+        timeupdate: function(e) {
+            if (e.jPlayer.status.currentTime > 30) {
+                pushtoScrobbler(curSong);
+            }
+        },
+        loadeddata: function() {
+            curSong.scrobbled = false;
+        }
+    });
+    $('.jp-next').on('click', function(e) {
+        e.preventDefault();
+        currentIndex++;
+        $('#playlist a:eq(' + currentIndex + ')').trigger('click');
+    });
+
+    VK.init({
+        apiId: app.apikeys.vk
+    });
+
+    app.lfmToken = getParameterByName('token');
+    app.last = localStorage.last ? JSON.parse(localStorage.last) : {};
+
+    if (app.lfmToken.length > 0) {
+        lastfm.auth.getSession({
+            token: app.lfmToken
+        }, {
+            success: function(data) {
+                console.log(data);
+                app.sk = data.session.key;
+                localStorage.last = JSON.stringify({
+                    sk: data.session.key
+                });
+            },
+            error: function(code, message) {
+                console.log(code, message);
+            }
+        });
+    }
+
+    initApis();
 
     $('#vk-login').on('click', function(e) {
         e.preventDefault();
-        if(!$(this).is(':disabled'))
+        if (!$(this).is(':disabled'))
             VK.Auth.login(authInfo, VK.access.AUDIO);
     });
 
     $('#last-login').on('click', function(e) {
         e.preventDefault();
-        if(!$(this).is(':disabled'))
-            window.location = 'http://www.last.fm/api/auth/?api_key='+app.apikeys.last.apiKey+'&cb=http://last.vk';
+        if (!$(this).is(':disabled'))
+            window.location = 'http://www.last.fm/api/auth/?api_key=' + app.apikeys.last.apiKey + '&cb=http://last.vk';
     });
 
     $('#search-form').on('submit', function(e) {
@@ -123,7 +173,8 @@ $(document).ready(function() {
     function loadSongs(artist, thissongs) {
         var def = new $.Deferred();
         var data = {
-            limit: 10
+            limit: 10,
+            autocorrect: 1
         };
         if (artist.mbid.length > 0) {
             $.extend(data, {
@@ -136,6 +187,7 @@ $(document).ready(function() {
         }
         lastfm.artist.getTopTracks(data, {
             success: function(data) {
+                data.toptracks.track.artist = artist;
                 app.playlist = $.merge(app.playlist, data.toptracks.track);
                 thissongs = $.merge(thissongs, data.toptracks.track);
                 def.resolve(thissongs);
@@ -148,37 +200,46 @@ $(document).ready(function() {
     }
 
     $('#playlist').on('artistsLoaded', function(e, newArtists) {
+        console.log(newArtists);
         var thissongs = [];
         var pipe = [];
         $.each(newArtists, function(ind, artist) {
             pipe.push(loadSongs(artist, thissongs));
         });
-        //console.log(pipe);
+        
         $.when.apply($, pipe).then(function(newSongs) {
             $('#playlist').trigger('playlistUpdated', [newSongs]);
         });
     })
-        .on('playlistUpdated', function(e, songs) {
-            songs = shuffleArray(songs);
-            var me = this;
-            $.each(songs, function(ind, song) {
-                var row = $('<a href="#" class="list-group-item">' + song.artist.name + ' - ' + song.name + '</a>');
-                row.data('song', song);
-                $(me).append(row);
-            });
-            $('#loading').removeClass('in');
-            currentIndex++;
-            $('#playlist a:eq(' + currentIndex +')').trigger('click');
+
+    .on('playlistUpdated', function(e, songs) {
+        songs = shuffleArray(songs);
+        var me = this;
+        $.each(songs, function(ind, song) {
+            var row = $('<a href="#" class="list-group-item">' + song.artist.name + ' - ' + song.name + '</a>');
+            row.data('song', song);
+            $(me).append(row);
         });
-    $('#playlist').on('click', 'a', function(e) {
+        $('#loading').removeClass('in');
+        currentIndex++;
+        $('#playlist a:eq(' + currentIndex + ')').trigger('click');
+    })
+
+    .on('click', 'a', function(e) {
         e.preventDefault();
-        currentIndex = $(this).index();
         var selEl = $(this);
-        var curSong = selEl.data('song');
-        var exactSongs = [];
+
         $('#playlist a').removeClass('active');
         selEl.addClass('active');
+
+        currentIndex = $(this).index();
+        
+        curSong = selEl.data('song');
+
+        var exactSongs = [];
+
         var query = curSong.artist.name + ' - ' + curSong.name;
+
         VK.Api.call('audio.search', {
             q: query,
             sort: 2,
@@ -196,15 +257,59 @@ $(document).ready(function() {
                     exactSongs = shuffleArray(vsongs);
                 }
                 player.jPlayer('setMedia', {
-                    mp3: exactSongs[Math.floor(Math.random()*exactSongs.length)].url
+                    mp3: exactSongs[Math.floor(Math.random() * exactSongs.length)].url
                 });
                 player.jPlayer('load');
                 player.jPlayer('play');
+                console.log(curSong);
+                if (curSong.image) {
+                    var songImgSrc = curSong.image[3]['#text'];
+                    $('#song-img').attr('src', songImgSrc);
+                } else if(curSong.artist.image){
+                    $('#song-img').attr('src', curSong.image[3]['#text']);
+                } else {
+                    $('#song-img').attr('src', '');
+                }
 
+
+                $('#song-title').html('<h1>' + curSong.name + ' <small>by ' + curSong.artist.name + '</small></h1>');
+                $('#song-info').show();
+
+                lastfm.track.getInfo({
+                    mbid: curSong.mbid,
+                    artist: curSong.artist.name,
+                    track: curSong.name
+                }, {
+                    success: function(data) {
+                        console.log(data.track);
+                        var track = data.track;
+                        var tags = [];
+                        if(track.album){
+                            $('#album-name').parent().show();
+                            $('#album-name').html(track.album.title);
+                        }else{
+                            $('#album-name').parent().hide();
+                        }
+                        if(track.toptags.tag){
+                            for (var i in track.toptags.tag) {
+                                tags.push(track.toptags.tag[i].name);
+                            }
+                            console.log(tags);
+                            $('#track-genre').parent().show();
+                            $('#track-genre').html(tags.join(', '));
+                        }else{
+                            $('#track-genre').parent().hide();
+                        }
+                    },
+                    error: function(code, reason) {
+                        console.log(code, reason);
+
+                    }
+                })
             }
         });
 
     });
 
-    
+
 });
