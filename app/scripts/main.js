@@ -12,8 +12,15 @@ var app = {
     vk: {},
     last: {
         sk: null
-    }
+    },
+    host: 'last.vk'
 };
+
+if(location.hostname === 'skakruk.github.io'){
+    app.apikeys.vk = 3996225;
+    app.host = 'skakruk.github.io/lastvk/app/';
+}
+
 var player;
 var isLastAuthorized = false;
 var isVKAuthorized = false;
@@ -150,7 +157,7 @@ $(document).ready(function() {
     $('#last-login').on('click', function(e) {
         e.preventDefault();
         if (!$(this).is(':disabled'))
-            window.location = 'http://www.last.fm/api/auth/?api_key=' + app.apikeys.last.apiKey + '&cb=http://last.vk';
+            window.location = 'http://www.last.fm/api/auth/?api_key=' + app.apikeys.last.apiKey + '&cb=http://' + app.host;
     });
 
     $('#search-form').on('submit', function(e) {
