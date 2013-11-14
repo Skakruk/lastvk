@@ -125,7 +125,6 @@ $(document).ready(function() {
             token: app.lfmToken
         }, {
             success: function(data) {
-                console.log(data);
                 app.sk = data.session.key;
                 localStorage.last = JSON.stringify({
                     sk: data.session.key
@@ -200,7 +199,6 @@ $(document).ready(function() {
     }
 
     $('#playlist').on('artistsLoaded', function(e, newArtists) {
-        console.log(newArtists);
         var thissongs = [];
         var pipe = [];
         $.each(newArtists, function(ind, artist) {
@@ -261,16 +259,16 @@ $(document).ready(function() {
                 });
                 player.jPlayer('load');
                 player.jPlayer('play');
-                console.log(curSong);
+
+                var songImgSrc = '/images/no-cover.jpg';
+
                 if (curSong.image) {
-                    var songImgSrc = curSong.image[3]['#text'];
-                    $('#song-img').attr('src', songImgSrc);
+                    songImgSrc = curSong.image[3]['#text'];
                 } else if(curSong.artist.image){
-                    $('#song-img').attr('src', curSong.image[3]['#text']);
-                } else {
-                    $('#song-img').attr('src', '');
+                    songImgSrc = curSong.image[3]['#text'];
                 }
 
+                $('#song-img').attr('src', songImgSrc);
 
                 $('#song-title').html('<h1>' + curSong.name + ' <small>by ' + curSong.artist.name + '</small></h1>');
                 $('#song-info').show();
@@ -281,12 +279,10 @@ $(document).ready(function() {
                     track: curSong.name
                 }, {
                     success: function(data) {
-                        console.log(data.track);
                         var track = data.track;
                         var tags = [];
                         if(track.album){
-                            $('#album-name').parent().show();
-                            $('#album-name').html(track.album.title);
+                            $('#album-name').html(track.album.title).parent().show();
                         }else{
                             $('#album-name').parent().hide();
                         }
@@ -294,9 +290,7 @@ $(document).ready(function() {
                             for (var i in track.toptags.tag) {
                                 tags.push(track.toptags.tag[i].name);
                             }
-                            console.log(tags);
-                            $('#track-genre').parent().show();
-                            $('#track-genre').html(tags.join(', '));
+                            $('#track-genre').html(tags.join(', ')).parent().show();
                         }else{
                             $('#track-genre').parent().hide();
                         }
@@ -305,7 +299,28 @@ $(document).ready(function() {
                         console.log(code, reason);
 
                     }
-                })
+                });
+                
+                lastfm.artist.getInfo({
+                    mbid: curSong.artist.mbid,
+                    artist: curSong.artist.name
+                }, {
+                    success: function(data) {
+                        var artist = data.artist;
+                        console.log(artist);
+                        if(artist.bio.content){
+                            $('#bio').html(artist.bio.content.replace(/\n/g, "<br />")).show();
+                        }else{
+                            $('#bio').hide();
+                        }
+                            
+                    },
+                    error: function(code, reason) {
+                        console.log(code, reason);
+
+                    }
+                });
+
             }
         });
 
