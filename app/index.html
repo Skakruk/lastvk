@@ -11,7 +11,7 @@
         <meta name="viewport" content="width=device-width">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <!-- build:css(.tmp) styles/main.css -->
-        <link rel="stylesheet" href="styles/blue.monday/jplayer.blue.monday.css" />
+        <!-- <link rel="stylesheet" href="styles/blue.monday/jplayer.blue.monday.css" /> -->
         <link rel="stylesheet" href="styles/main.css">
         
 
@@ -27,20 +27,53 @@
 
         <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
       <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Last.VK</a>
+        <div class="row">
+          <div id="player" class="jp-jplayer"></div>
+          <div class="col-md-1 col-lg-1">
+            <a class="navbar-brand" href="#">Last.VK</a>
+          </div>
+   
+
+            <div id="jp_container_1" class="jp-audio">
+              <div class="jp-type-single">
+                  <div class="jp-gui jp-interface">
+                      <div class="jp-controls col-md-1 col-lg-1 text-center">
+
+                          <button class="jp-play btn btn-lg btn-primary" tabindex="1">
+                            <span class="glyphicon glyphicon-play"></span>
+                          </button>
+                          <button class="jp-pause btn btn-lg btn-primary" tabindex="1">
+                            <span class="glyphicon glyphicon-pause"></span>
+                          </button>
+                          <button class="jp-next btn btn-default" tabindex="1">
+                            <span class="glyphicon glyphicon-forward"></span>
+                          </button>
+
+                      </div>
+
+                      <div class="col-md-9 col-lg-9">
+                        <div class="jp-progress-wrap progress">
+                          <div class="jp-play-bar progress-bar" role="progressbar"></div>
+                          <div class="jp-seek-bar"></div>
+                        </div>
+
+                        <div class="jp-time-holder">
+                          <small class="jp-current-time pull-left"></small>
+                          <small class="jp-duration pull-right"></small>
+                        </div>
+                      </div>
+
+                      <div class="col-md-1 col-lg-1">
+                        <div class="jp-volume-bar label">
+                            <div class="jp-volume-bar-value label label-primary">&nbsp;</div>
+                        </div>
+                      </div>
+                      
+                  </div>
+              </div>
+
+          </div><!-- /.nav-collapse -->
         </div>
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            
-          </ul>
-        </div><!-- /.nav-collapse -->
       </div><!-- /.container -->
     </div><!-- /.navbar -->
 
@@ -96,43 +129,7 @@
       <hr>
 
       <footer>
-        <div id="player" class="jp-jplayer"></div>
-        <div id="jp_container_1" class="jp-audio">
-          <div class="jp-type-single">
-              <div class="jp-gui jp-interface">
-                  <ul class="jp-controls">
-                      <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
-                      <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
-                      <li><a href="javascript:;" class="jp-next" tabindex="1">stop</a></li>
-                      <li style="float: right; margin-right: 60px;"><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
-                      <li style="float: right; margin-right: 60px;"><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
-                  </ul>
-                  <div class="jp-progress-wrap">
-                    <div class="jp-progress">
-                        <div class="jp-seek-bar">
-                            <div class="jp-play-bar"></div>
-                        </div>
-                    </div>
-                  </div>
-                  <div class="jp-volume-bar">
-                      <div class="jp-volume-bar-value"></div>
-                  </div>
-                  <div class="jp-time-holder">
-                      <div class="jp-current-time"></div>
-                      <div class="jp-duration"></div>
-
-                      <ul class="jp-toggles">
-                          <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
-                          <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
-                      </ul>
-                  </div>
-              </div>
-              <div class="jp-no-solution">
-                  <span>Update Required</span>
-                  To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
-              </div>
-          </div>
-        </div>
+        
       </footer>
         
 

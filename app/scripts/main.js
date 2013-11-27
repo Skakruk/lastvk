@@ -93,7 +93,7 @@ function initApis() {
 }
 
 function sidebarHeight() {
-    var nH = +$(window).height() - 140;
+    var nH = +$(window).height() - 70;
     $('#sidebar').css('height', nH);
 }
 $(document).ready(function() {
@@ -293,7 +293,7 @@ $(document).ready(function() {
                 player.jPlayer('load');
                 player.jPlayer('play');
 
-                var songImgSrc = '/images/no-cover.jpg';
+                var songImgSrc = 'images/no-cover.jpg';
 
                 if (curSong.image) {
                     songImgSrc = curSong.image[3]['#text'];
