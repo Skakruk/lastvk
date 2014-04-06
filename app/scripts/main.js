@@ -250,17 +250,15 @@ $(document).ready(function() {
             dataType: "json",
             url: 'http://pipes.yahoo.com/pipes/pipe.run',
             data: data,
-            success: function(response){                
-                $.each(response.value.items, function(ind, art){
-                    if(art.songs !== null){
-                        //data.toptracks.track.artist = artist
-                        app.playlist = $.merge(app.playlist, art.songs);
-                        thissongs = $.merge(thissongs, art.songs);
-                    }
-                })
-                
-            },
             jsonp: '_callback'
+        }).always(function(response){                
+            $.each(response.value.items, function(ind, art){
+                if(art.songs !== null){
+                    //data.toptracks.track.artist = artist
+                    app.playlist = $.merge(app.playlist, art.songs);
+                    thissongs = $.merge(thissongs, art.songs);
+                }
+            })
         });
     }
 
