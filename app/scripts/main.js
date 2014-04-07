@@ -219,16 +219,60 @@ $(document).ready(function() {
         });
         return def.promise();
     }
+    function loadSimilar(artist){
+        var def = new $.Deferred();
+        lastfm.artist.getSimilar({
+            artist: artist.name,
+            limit: 5
+        }, {
+            success: function(data) {
+                app.artists = $.merge(app.artists, data.similarartists.artist);
+                def.resolve(app.artists);
+            },
+            error: function(code, message) {
+                console.log(code, message);
+            }
+        });
+        return def.promise();
+    }
+
+    function loadPipeSongs(artist, thissongs){
+        var def = new $.Deferred();
+        var data = {
+            '_id' : '497d65876d1d3fab8ea3d33f61b82a90',
+            '_render' : 'json',
+            'api_key' : app.apikeys.last.apiKey,
+            'mbid' :  artist.mbid,
+            'limitsongs' : 20
+        };
+
+        return $.ajax({
+            dataType: "json",
+            url: 'http://pipes.yahoo.com/pipes/pipe.run',
+            data: data,
+            jsonp: '_callback'
+        }).always(function(response){                
+            $.each(response.value.items, function(ind, art){
+                if(art.songs !== null){
+                    //data.toptracks.track.artist = artist
+                    app.playlist = $.merge(app.playlist, art.songs);
+                    thissongs = $.merge(thissongs, art.songs);
+                }
+            })
+        });
+    }
 
     $('#playlist').on('artistsLoaded', function(e, newArtists) {
         var thissongs = [];
         var pipe = [];
         $.each(newArtists, function(ind, artist) {
-            pipe.push(loadSongs(artist, thissongs));
+            pipe.push(loadPipeSongs(artist, thissongs));
         });
-
+         
         $.when.apply($, pipe).then(function(newSongs) {
-            $('#playlist').trigger('playlistUpdated', [newSongs]);
+           
+            $('#playlist').trigger('playlistUpdated', [thissongs]);
+
         });
     })
 
@@ -296,9 +340,9 @@ $(document).ready(function() {
                 var songImgSrc = 'images/no-cover.jpg';
 
                 if (curSong.image) {
-                    songImgSrc = curSong.image[3]['#text'];
+                    songImgSrc = curSong.image[3]['_text'];
                 } else if (curSong.artist.image) {
-                    songImgSrc = curSong.image[3]['#text'];
+                    songImgSrc = curSong.image[3]['_text'];
                 }
 
                 $('#song-img').attr('src', songImgSrc);
