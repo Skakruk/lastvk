@@ -194,7 +194,7 @@ $(document).ready(function() {
     function loadSongs(artist, thissongs) {
         var def = new $.Deferred();
         var data = {
-            limit: 10,
+            limit: 20,
             autocorrect: 1
         };
         if (artist.mbid.length > 0) {
@@ -219,22 +219,7 @@ $(document).ready(function() {
         });
         return def.promise();
     }
-    function loadSimilar(artist){
-        var def = new $.Deferred();
-        lastfm.artist.getSimilar({
-            artist: artist.name,
-            limit: 5
-        }, {
-            success: function(data) {
-                app.artists = $.merge(app.artists, data.similarartists.artist);
-                def.resolve(app.artists);
-            },
-            error: function(code, message) {
-                console.log(code, message);
-            }
-        });
-        return def.promise();
-    }
+
 
     function loadPipeSongs(artist, thissongs){
         var def = new $.Deferred();
@@ -243,14 +228,18 @@ $(document).ready(function() {
             '_render' : 'json',
             'api_key' : app.apikeys.last.apiKey,
             'mbid' :  artist.mbid,
-            'limitsongs' : 20
+            'limitsongs' : 30
         };
-
+        if(data.mbid.length == 0){
+            data.artistname = artist.name;
+        }
         return $.ajax({
             dataType: "json",
             url: 'http://pipes.yahoo.com/pipes/pipe.run',
             data: data,
-            success: function(response){                
+            jsonp: '_callback'
+        }).always(function(response){
+            if(response)
                 $.each(response.value.items, function(ind, art){
                     if(art.songs !== null){
                         //data.toptracks.track.artist = artist
@@ -258,9 +247,6 @@ $(document).ready(function() {
                         thissongs = $.merge(thissongs, art.songs);
                     }
                 })
-                
-            },
-            jsonp: '_callback'
         });
     }
 
