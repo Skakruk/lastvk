@@ -17,7 +17,7 @@ var app = {
 };
 
 if (location.hostname === 'skakruk.github.io') {
-    app.apikeys.vk = 4662147;
+    app.apikeys.vk = 4662184;
     app.host = 'skakruk.github.io/lastvk/app/';
 }
 
